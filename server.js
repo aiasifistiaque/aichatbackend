@@ -8,6 +8,7 @@ import chatRoute from './routes/chatRoute.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import Chat from './models/chatModel.js';
+import updateLatestChats from './controllers/latestChatsController.js';
 
 dotenv.config();
 connectDB();
@@ -54,6 +55,7 @@ chatStream.on('change', doc => {
 
 		io.of('/chats').to(roomId).emit('newChat', doc.fullDocument);
 		//socket.emit('docChange', doc.fullDocument);
+		updateLatestChats(doc.fullDocument);
 	} else if (doc.operationType == 'delete') {
 		//socket.emit('docDelete', doc.documentKey);
 	}
