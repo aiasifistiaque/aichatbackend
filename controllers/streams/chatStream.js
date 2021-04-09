@@ -10,7 +10,7 @@ const chatStream = doc => {
 		const sortedUsers = users.sort();
 		const roomId = sortedUsers[0] + sortedUsers[1];
 
-		io.of('/chats').to(roomId).emit('newChat', doc.fullDocument);
+		io.of('/users').to(roomId).emit('newChat', doc.fullDocument);
 		//socket.emit('docChange', doc.fullDocument);
 		updateLatestChats(doc.fullDocument);
 	} else if (doc.operationType == 'delete') {

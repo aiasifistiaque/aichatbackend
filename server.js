@@ -67,6 +67,39 @@ io.of('/chats').on('connection', socket => {
 	});
 });
 
+io.of('/users').on('connection', socket => {
+	console.log(`a connection was estublished ${socket.id}`);
+
+	socket.emit('connected', socket.id);
+
+	const chatRoomId = socket.handshake.query['chatRoomId'];
+	console.log('num of connections', io.engine.clientsCount);
+
+	socket.on('join chat room', data => {
+		socket.join(data.roomId);
+		console.log(`${socket.id} joined room ${data.roomId}`);
+	});
+
+	socket.on('leave chat room', data => {
+		socket.leave(data.roomId);
+		console.log(`${socket.id} joined left ${data.roomId}`);
+	});
+
+	socket.on('join home room', data => {
+		socket.join(data.roomId);
+		console.log(`${socket.id} joined room ${data.roomId}`);
+	});
+
+	socket.on('leave home room', data => {
+		socket.leave(data.roomId);
+		console.log(`${socket.id} joined left ${data.roomId}`);
+	});
+
+	socket.on('disconnect', () => {
+		console.log(`Disconnected: ${socket.id}`);
+	});
+});
+
 const port = process.env.PORT || 5001;
 
 httpServer.listen(port, console.log(`Server socket running on port ${port}`));

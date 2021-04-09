@@ -21,7 +21,7 @@ const updateLatestChats = async doc => {
 		findSender.status = doc.status;
 		findSender.msgStatus = doc.msgStatus;
 		findSender.isSender = true;
-		io.of('/activechats').to(sender).emit('updateactivechats', findSender);
+		io.of('/users').to(sender).emit('updateactivechats', findSender);
 		findSender.save();
 	} else {
 		console.log('add chat to sender');
@@ -34,7 +34,7 @@ const updateLatestChats = async doc => {
 			status: doc.status,
 			msgStatus: doc.msgStatus,
 		});
-		io.of('/activechats').to(sender).emit('addactivechats', postSender);
+		io.of('/users').to(sender).emit('addactivechats', postSender);
 
 		postSender.save();
 	}
@@ -47,7 +47,7 @@ const updateLatestChats = async doc => {
 		findReceiver.msgStatus = doc.msgStatus;
 		findReceiver.isSender = false;
 
-		io.of('/activechats').to(receiver).emit('updateactivechats', findReceiver);
+		io.of('/users').to(receiver).emit('updateactivechats', findReceiver);
 
 		findReceiver.save();
 	} else {
@@ -61,7 +61,7 @@ const updateLatestChats = async doc => {
 			status: doc.status,
 			msgStatus: doc.msgStatus,
 		});
-		io.of('/activechats').to(receiver).emit('addactivechats', postReceiver);
+		io.of('/users').to(receiver).emit('addactivechats', postReceiver);
 
 		postReceiver.save();
 	}
