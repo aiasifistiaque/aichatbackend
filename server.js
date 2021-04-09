@@ -72,7 +72,7 @@ io.of('/users').on('connection', socket => {
 
 	socket.emit('connected', socket.id);
 
-	const chatRoomId = socket.handshake.query['chatRoomId'];
+	//const chatRoomId = socket.handshake.query['chatRoomId'];
 	console.log('num of connections', io.engine.clientsCount);
 
 	socket.on('join chat room', data => {
