@@ -9,10 +9,12 @@ import chatRoute from './routes/chatRoute.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import Chat from './models/chatModel.js';
+import Friend from './models/friendModel.js';
 import chatStreamWatch from './controllers/streams/chatStream.js';
 import activeChatsSocket from './socket/activeChatsSocket.js';
 import LatestChat from './models/latestChatModel.js';
 import activeChatsStreamWatch from './controllers/streams/activeChatsStream.js';
+import friendRequestWatch from './controllers/streams/friendRequestStream.js';
 
 dotenv.config();
 connectDB();
@@ -48,6 +50,9 @@ app.use('/api/latestchats', latestChatsRoute);
 
 const chatStream = Chat.watch();
 chatStream.on('change', chatStreamWatch);
+
+const friendReqStream = Friend.watch();
+friendReqStream.on('change', friendRequestWatch);
 
 const activeChatStream = LatestChat.watch();
 //activeChatStream.on('change', activeChatsStreamWatch);
@@ -87,11 +92,13 @@ io.of('/users').on('connection', socket => {
 
 	socket.on('join home room', data => {
 		socket.join(data.roomId);
+		socket.join(data.uid);
 		console.log(`${socket.id} joined room ${data.roomId}`);
 	});
 
 	socket.on('leave home room', data => {
 		socket.leave(data.roomId);
+		socket.leave(data.uid);
 		console.log(`${socket.id} joined left ${data.roomId}`);
 	});
 
