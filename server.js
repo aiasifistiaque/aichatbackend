@@ -85,6 +85,24 @@ io.of('/users').on('connection', socket => {
 		console.log(`${socket.id} joined room ${data.roomId}`);
 	});
 
+	socket.on('send a new message', async (data, callback) => {
+		const addChat = new Chat({
+			message: data.message,
+			receiver: data.receiver,
+			people: [data.sender, data.receiver],
+			sender: data.sender,
+			status: 'sent',
+			msgStatus: 'visible',
+		});
+		try {
+			const chatAdded = await addChat.save();
+			callback({ status: 'ok' });
+		} catch (e) {
+			callback({ status: 'error' });
+			console.log(e);
+		}
+	});
+
 	socket.on('leave chat room', data => {
 		socket.leave(data.roomId);
 		console.log(`${socket.id} joined left ${data.roomId}`);

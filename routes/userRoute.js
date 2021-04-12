@@ -74,4 +74,34 @@ router.post(
 	})
 );
 
+router.post('/search', async (req, res) => {
+	let query = [];
+	if (req.body.searchString.length < 1)
+		res.status(200).json({ users: [], exists: false });
+	try {
+		if (req.body.searchString.length > 0) {
+			query = await User.find()
+				.where({
+					$or: [
+						{
+							username: { $regex: req.body.searchString, $options: 'i' },
+						},
+						{
+							displayName: { $regex: req.body.searchString, $options: 'i' },
+						},
+					],
+				})
+				.limit(5);
+		}
+		if (query.length > 0) {
+			res.status(200).json({ users: query, exists: true });
+		} else {
+			res.status(200).json({ users: [], exists: false });
+		}
+	} catch (e) {
+		console.log(e);
+		res.status(200).json({ users: [], exists: false, error: true });
+	}
+});
+
 export default router;
