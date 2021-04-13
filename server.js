@@ -83,9 +83,10 @@ io.of('/users').on('connection', socket => {
 	//const chatRoomId = socket.handshake.query['chatRoomId'];
 	console.log('num of connections', io.engine.clientsCount);
 
-	socket.on('join chat room', data => {
+	socket.on('join chat room', (data, callback) => {
 		socket.join(data.roomId);
 		console.log(`${socket.id} joined room ${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
 	socket.on('send a new message', async (data, callback) => {
@@ -106,9 +107,10 @@ io.of('/users').on('connection', socket => {
 		}
 	});
 
-	socket.on('leave chat room', data => {
+	socket.on('leave chat room', (data, callback) => {
 		socket.leave(data.roomId);
 		console.log(`${socket.id} joined left ${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
 	socket.on('join home room', (data, callback) => {
