@@ -124,12 +124,14 @@ io.of('/users').on('connection', socket => {
 	});
 
 	//room for friend requests
-	socket.on('join request room', data => {
+	socket.on('join request room', (data, callback) => {
 		socket.join(`friendReq${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
-	socket.on('leave request room', data => {
+	socket.on('leave request room', (data, callback) => {
 		socket.leave(`friendReq${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
 	//room for friend list
