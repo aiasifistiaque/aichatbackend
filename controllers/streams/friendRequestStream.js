@@ -6,21 +6,23 @@ const friendRequestStream = doc => {
 	if (doc.operationType == 'insert') {
 		console.log(doc);
 		io.of('/users')
-			.to(doc.fullDocument.receiver)
+			.to(`friendReq${doc.fullDocument.receiver}`)
 			.emit('newFriendRequest', doc.fullDocument);
 	} else if (doc.operationType == 'delete') {
 		console.log(doc);
-		// io.of('/users')
-		// 	.to(doc.fullDocument.receiver)
-		// 	.emit('canceledFriendRequest', doc.fullDocument);
 	} else if (doc.operationType == 'update') {
 		console.log(doc);
 
 		Friend.findOne(doc.documentKey)
 			.then(res => {
-				console.log(res);
-				io.of('/users').to(doc.sender).emit('newFriend', doc.fullDocument);
-				io.of('/users').to(doc.receiver).emit('newFriend', doc.fullDocument);
+				if (res.status == 'friends') {
+					io.of('/users')
+						.to(`friendlist${doc.data.sender}`)
+						.emit('newFriend', res.data);
+					io.of('/users')
+						.to(`friendlist${doc.data.receiver}`)
+						.emit('newFriend', res.data);
+				}
 			})
 			.catch(e => console.log(e));
 	}

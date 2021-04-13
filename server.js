@@ -75,6 +75,9 @@ io.of('/chats').on('connection', socket => {
 io.of('/users').on('connection', socket => {
 	console.log(`a connection was estublished ${socket.id}`);
 
+	const userid = socket.handshake.query.id;
+	socket.join(userid);
+
 	socket.emit('connected', socket.id);
 
 	//const chatRoomId = socket.handshake.query['chatRoomId'];
@@ -120,8 +123,27 @@ io.of('/users').on('connection', socket => {
 		console.log(`${socket.id} joined left ${data.roomId}`);
 	});
 
+	//room for friend requests
+	socket.on('join request room', data => {
+		socket.join(`friendReq${data.roomId}`);
+	});
+
+	socket.on('leave request room', data => {
+		socket.leave(`friendReq${data.roomId}`);
+	});
+
+	//room for friend list
+	socket.on('join friendlist room', data => {
+		socket.join(`friendlist${data.roomId}`);
+	});
+
+	socket.on('leave friendlist room', data => {
+		socket.leave(`friendlist${data.roomId}`);
+	});
+
 	socket.on('disconnect', () => {
 		console.log(`Disconnected: ${socket.id}`);
+		socket.leave(userid);
 	});
 });
 
