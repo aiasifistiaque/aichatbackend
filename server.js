@@ -111,16 +111,18 @@ io.of('/users').on('connection', socket => {
 		console.log(`${socket.id} joined left ${data.roomId}`);
 	});
 
-	socket.on('join home room', data => {
+	socket.on('join home room', (data, callback) => {
 		socket.join(data.roomId);
 		socket.join(data.uid);
 		console.log(`${socket.id} joined room ${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
-	socket.on('leave home room', data => {
+	socket.on('leave home room', (data, callback) => {
 		socket.leave(data.roomId);
 		socket.leave(data.uid);
 		console.log(`${socket.id} joined left ${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
 	//room for friend requests
