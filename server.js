@@ -135,12 +135,14 @@ io.of('/users').on('connection', socket => {
 	});
 
 	//room for friend list
-	socket.on('join friendlist room', data => {
+	socket.on('join friendlist room', (data, callback) => {
 		socket.join(`friendlist${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
-	socket.on('leave friendlist room', data => {
+	socket.on('leave friendlist room', (data, callback) => {
 		socket.leave(`friendlist${data.roomId}`);
+		callback({ status: 'ok' });
 	});
 
 	socket.on('disconnect', () => {
