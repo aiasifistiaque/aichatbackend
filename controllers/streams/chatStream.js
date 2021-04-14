@@ -21,6 +21,7 @@ const chatStream = async doc => {
 
 		if (user) {
 			//console.log('user has been detected', user);
+			if (user.notificationToken == undefined) return;
 			messages.push({
 				to: user.notificationToken,
 				sound: 'default',
@@ -31,7 +32,6 @@ const chatStream = async doc => {
 
 			console.log(messages);
 			let tickets = await sendMessage(messages);
-			messages = [];
 		}
 
 		//socket.emit('docChange', doc.fullDocument);
