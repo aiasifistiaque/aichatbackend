@@ -15,18 +15,21 @@ const chatStream = async doc => {
 		io.of('/users').to(roomId).emit('newChat', doc.fullDocument);
 
 		const receiver = doc.fullDocument.receiver;
+		const sender = doc.fullDocument.sender;
+		const senderUser = await User.findOne({ uid: sender });
 		const user = await User.findOne({ uid: receiver });
 
 		if (user) {
 			//console.log('user has been detected', user);
-			messages.push({
+			const message = {
 				to: user.notificationToken,
 				sound: 'default',
+				title: senderUser.username,
 				body: doc.fullDocument.message,
 				data: { doc: doc.fullDocument },
-			});
-			console.log(messages);
-			let tickets = await sendMessage(messages);
+			};
+			console.log(message);
+			let tickets = await sendMessage(message);
 		}
 
 		//socket.emit('docChange', doc.fullDocument);
