@@ -3,6 +3,7 @@ import Chat from '../../models/chatModel.js';
 import { io, messages } from '../../server.js';
 import updateLatestChats from '../latestChatsController.js';
 import User from '../../models/userModel.js';
+import { sendMessage } from '../../expo/index.js';
 
 const chatStream = async doc => {
 	console.log('changes have been made');
@@ -25,6 +26,7 @@ const chatStream = async doc => {
 				data: { doc: doc.fullDocument },
 			});
 			console.log(messages);
+			let tickets = await sendMessage(messages);
 		}
 
 		//socket.emit('docChange', doc.fullDocument);
