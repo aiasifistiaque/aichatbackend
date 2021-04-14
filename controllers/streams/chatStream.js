@@ -3,7 +3,11 @@ import Chat from '../../models/chatModel.js';
 import { io, messages } from '../../server.js';
 import updateLatestChats from '../latestChatsController.js';
 import User from '../../models/userModel.js';
-import { sendMessage } from '../../expo/index.js';
+import {
+	sendMessage,
+	getReceiptIds,
+	obtainReceipts,
+} from '../../expo/index.js';
 
 const chatStream = async doc => {
 	console.log('changes have been made');
@@ -19,19 +23,21 @@ const chatStream = async doc => {
 		const senderUser = await User.findOne({ uid: sender });
 		const user = await User.findOne({ uid: receiver });
 
+		updateLatestChats(doc.fullDocument);
+
 		if (user) {
 			//console.log('user has been detected', user);
 			if (!user.notificationToken || user.notificationToken == null) {
 			} else {
-				messages.push({
-					to: user.notificationToken,
-					sound: 'default',
-					title: senderUser.username,
-					body: doc.fullDocument.message,
-					data: { doc: doc.fullDocument },
-				});
+				// messages.push({
+				// 	to: user.notificationToken,
+				// 	sound: 'default',
+				// 	title: senderUser.username,
+				// 	body: doc.fullDocument.message,
+				// 	data: { doc: doc.fullDocument },
+				// });
 
-				console.log(messages);
+				//console.log(messages);
 				let tickets = await sendMessage([
 					{
 						to: user.notificationToken,
@@ -41,11 +47,12 @@ const chatStream = async doc => {
 						data: { doc: doc.fullDocument },
 					},
 				]);
+				let receiptIds = getReceiptIds(tickets);
+				await obtainReceipts(receiptIds);
 			}
 		}
 
 		//socket.emit('docChange', doc.fullDocument);
-		updateLatestChats(doc.fullDocument);
 	} else if (doc.operationType == 'delete') {
 		//socket.emit('docDelete', doc.documentKey);
 	}
