@@ -17,7 +17,7 @@ const chatStream = async doc => {
 		const user = await User.findOne({ uid: receiver });
 
 		if (user) {
-			console.log('user has been detected');
+			console.log('user has been detected', user);
 			messages.push({
 				to: user.token,
 				sound: 'default',
