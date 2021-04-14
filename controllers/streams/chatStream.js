@@ -1,9 +1,10 @@
 //
 import Chat from '../../models/chatModel.js';
-import { io } from '../../server.js';
+import { io, messages } from '../../server.js';
 import updateLatestChats from '../latestChatsController.js';
+import User from '../../models/userModel.js';
 
-const chatStream = doc => {
+const chatStream = async doc => {
 	console.log('changes have been made');
 	if (doc.operationType == 'insert') {
 		const users = doc.fullDocument.people;
@@ -11,6 +12,19 @@ const chatStream = doc => {
 		const roomId = sortedUsers[0] + sortedUsers[1];
 
 		io.of('/users').to(roomId).emit('newChat', doc.fullDocument);
+
+		const receiver = doc.fullDocument.receiver;
+		const user = await User.findOne({ uid: receiver });
+
+		if (user) {
+			messages.push({
+				to: user.token,
+				sound: 'default',
+				body: doc.fullDocument.message,
+				data: { doc: doc.fullDocument },
+			});
+		}
+
 		//socket.emit('docChange', doc.fullDocument);
 		updateLatestChats(doc.fullDocument);
 	} else if (doc.operationType == 'delete') {
