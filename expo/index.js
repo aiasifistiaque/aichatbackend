@@ -1,7 +1,7 @@
 import { expo, messages } from '../server.js';
 
-export const sendMessage = async () => {
-	let chunks = expo.chunkPushNotifications(messages);
+export const sendMessage = async msg => {
+	let chunks = expo.chunkPushNotifications(msg);
 	let tickets = [];
 
 	// Send the chunks to the Expo push notification service. There are
@@ -12,7 +12,7 @@ export const sendMessage = async () => {
 			let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
 			console.log(ticketChunk);
 			tickets.push(...ticketChunk);
-			messages = [];
+			//messages = [];
 			// NOTE: If a ticket contains an error code in ticket.details.error, you
 			// must handle it appropriately. The error codes are listed in the Expo
 			// documentation:
