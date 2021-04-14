@@ -74,6 +74,18 @@ router.post(
 	})
 );
 
+router.put(
+	'/addnotificationtoken',
+	asyncHandler(async (req, res) => {
+		const user = await User.findOne({ uid: req.body.uid });
+		if (user) {
+			user.notificationToken = req.body.token;
+			const query = await user.save();
+			res.status(200).json({ user: query, exists: true });
+		} else res.status(200).json({ exists: false });
+	})
+);
+
 router.post('/search', async (req, res) => {
 	let query = [];
 	if (req.body.searchString.length < 1)

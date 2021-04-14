@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema(
 			unique: true,
 		},
 
+		notificationToken: {
+			type: String,
+		},
+
 		role: { type: String, default: 'user' },
 		//password: { type: String, required: true, minlength: 5, maxlength: 1024 },
 	},
