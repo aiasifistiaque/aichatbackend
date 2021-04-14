@@ -21,17 +21,27 @@ const chatStream = async doc => {
 
 		if (user) {
 			//console.log('user has been detected', user);
-			if (user.notificationToken == undefined) return;
-			messages.push({
-				to: user.notificationToken,
-				sound: 'default',
-				title: senderUser.username,
-				body: doc.fullDocument.message,
-				data: { doc: doc.fullDocument },
-			});
+			if (!user.notificationToken || user.notificationToken == null) {
+			} else {
+				messages.push({
+					to: user.notificationToken,
+					sound: 'default',
+					title: senderUser.username,
+					body: doc.fullDocument.message,
+					data: { doc: doc.fullDocument },
+				});
 
-			console.log(messages);
-			let tickets = await sendMessage(messages);
+				console.log(messages);
+				let tickets = await sendMessage([
+					{
+						to: user.notificationToken,
+						sound: 'default',
+						title: senderUser.username,
+						body: doc.fullDocument.message,
+						data: { doc: doc.fullDocument },
+					},
+				]);
+			}
 		}
 
 		//socket.emit('docChange', doc.fullDocument);
