@@ -14,6 +14,9 @@ export const onSocketConnection = socket => {
 	//const chatRoomId = socket.handshake.query['chatRoomId'];
 	console.log('num of connections', io.engine.clientsCount);
 
+	socket.join(`activechats${userid}`);
+	console.log(`${socket.id} joined room activechats${userid}`);
+
 	socket.on('join chat room', (data, callback) => {
 		socket.join(data.roomId);
 		console.log(`${socket.id} joined room ${data.roomId}`);
@@ -45,16 +48,16 @@ export const onSocketConnection = socket => {
 	});
 
 	socket.on('join home room', (data, callback) => {
-		socket.join(data.roomId);
-		socket.join(data.uid);
-		console.log(`${socket.id} joined room ${data.roomId}`);
+		// socket.join(data.roomId);
+		// socket.join(data.uid);
+		// console.log(`${socket.id} joined room ${data.roomId}`);
 		callback({ status: 'ok' });
 	});
 
 	socket.on('leave home room', (data, callback) => {
-		socket.leave(data.roomId);
-		socket.leave(data.uid);
-		console.log(`${socket.id} joined left ${data.roomId}`);
+		// socket.leave(data.roomId);
+		// socket.leave(data.uid);
+		// console.log(`${socket.id} joined left ${data.roomId}`);
 		callback({ status: 'ok' });
 	});
 
@@ -81,6 +84,8 @@ export const onSocketConnection = socket => {
 	});
 
 	socket.on('disconnect', () => {
+		socket.leave(`activechats${userid}`);
+		console.log(`${socket.id} left room activechats${userid}`);
 		console.log(`Disconnected: ${socket.id}`);
 		socket.leave(userid);
 	});
