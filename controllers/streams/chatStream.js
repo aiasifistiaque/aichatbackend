@@ -1,6 +1,5 @@
 //
-import Chat from '../../models/chatModel.js';
-import { io, messages } from '../../server.js';
+import { io } from '../../server.js';
 import updateLatestChats from '../latestChatsController.js';
 import User from '../../models/userModel.js';
 import {
@@ -29,15 +28,6 @@ const chatStream = async doc => {
 			//console.log('user has been detected', user);
 			if (!user.notificationToken || user.notificationToken == null) {
 			} else {
-				// messages.push({
-				// 	to: user.notificationToken,
-				// 	sound: 'default',
-				// 	title: senderUser.username,
-				// 	body: doc.fullDocument.message,
-				// 	data: { doc: doc.fullDocument },
-				// });
-
-				//console.log(messages);
 				let tickets = await sendMessage([
 					{
 						to: user.notificationToken,
