@@ -1,7 +1,7 @@
 //
 
-import { io } from '../server';
-import Chat from '../models/chatModel';
+import { io } from '../server.js';
+import Chat from '../models/chatModel.js';
 
 export const onSocketConnection = socket => {
 	console.log(`a connection was estublished ${socket.id}`);

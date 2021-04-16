@@ -14,6 +14,7 @@ import Friend from './models/friendModel.js';
 import chatStreamWatch from './controllers/streams/chatStream.js';
 import friendRequestWatch from './controllers/streams/friendRequestStream.js';
 import { onSocketConnection } from './socket/index.js';
+import LatestChat from './models/latestChatModel.js';
 
 dotenv.config();
 connectDB();
