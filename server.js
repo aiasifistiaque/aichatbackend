@@ -26,6 +26,7 @@ export let messages = [];
 
 const httpServer = createServer(app);
 export const io = new Server(httpServer, {
+	serveClient: false,
 	// ...
 });
 
