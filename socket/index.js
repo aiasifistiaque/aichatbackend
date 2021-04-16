@@ -6,7 +6,7 @@ import Chat from '../models/chatModel.js';
 export const onSocketConnection = socket => {
 	console.log(`a connection was estublished ${socket.id}`);
 
-	const userid = socket.handshake.query.id;
+	const userid = socket.handshake.query.uid;
 	socket.join(userid);
 
 	socket.emit('connected', socket.id);
